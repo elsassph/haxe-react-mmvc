@@ -56,7 +56,9 @@ class TodoListViewMediator extends mmvc.impl.Mediator<TodoListView>
 	override function onRegister()
 	{
 		//using mediate() to store listeners for easy cleanup during removal
-		//mediate(view.signal.add(viewHandler));
+		mediate(view.addNew.add(addNewTodo));
+		mediate(view.toggle.add(toggleTodo));
+
 		mediate(loadTodoList.completed.addOnce(loadCompleted));
 		mediate(loadTodoList.failed.addOnce(loadFailed));
 
@@ -71,15 +73,24 @@ class TodoListViewMediator extends mmvc.impl.Mediator<TodoListView>
 	{
 		super.onRemove();
 		//remove un mediated listeners
+		if (list != null)
+			list.changed.remove(listChanged);
 	}
 
 	/**
 		Callback for successful load of TodoList
+		Listen to list changes to update the view when it further changes
 		@see example.todo.signal.LoadTodoList
 	*/
 	function loadCompleted(list:TodoList)
 	{
 		this.list = list;
+		view.setData(list);
+		list.changed.add(listChanged);
+	}
+	
+	function listChanged() 
+	{
 		view.setData(list);
 	}
 
@@ -89,13 +100,26 @@ class TodoListViewMediator extends mmvc.impl.Mediator<TodoListView>
 	}
 
 	/**
-		Adds a new todo item to the model when CREATE_TODO event is dispatched
-	function viewHandler(event:String, view:View)
+		Adds a new todo item to the model when view triggers the `addNew` signal
+	*/
+	function addNewTodo(todoText:String)
 	{
-		if (event == TodoListView.CREATE_TODO)
+		list.add(new Todo(todoText));
+	}
+
+	/**
+		Toggle todo item when view triggers the `toggle` signal
+	*/
+	function toggleTodo(key:String)
+	{
+		for (todo in list)
 		{
-			list.add(new Todo());
+			if (todo.key == key)
+			{
+				todo.done = !todo.done;
+				list.changed.dispatch();
+				break;
+			}
 		}
 	}
-	*/
 }

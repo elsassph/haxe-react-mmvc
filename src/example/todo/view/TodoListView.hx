@@ -24,6 +24,7 @@ package example.todo.view;
 
 import example.todo.model.TodoList;
 import mmvc.react.IMediatedComponent;
+import msignal.Signal.Signal1;
 import react.ReactComponent;
 import react.ReactMacro.jsx;
 
@@ -35,9 +36,11 @@ typedef TodoListState = {
 @:expose
 class TodoListView extends ReactComponentOfState<TodoListState> implements IMediatedComponent
 {
-	static var mediatorClass = TodoListViewMediator; // live-reload mediator
+	// ship mediator with view for code-splitting / live-reload
+	static var mediatorClass = TodoListViewMediator; 
 	
-	inline public static var CREATE_TODO = "CREATE_TODO";
+	public var addNew:Signal1<String> = new Signal1();
+	public var toggle:Signal1<String> = new Signal1();
 	
 	public function new()
 	{
@@ -75,7 +78,7 @@ class TodoListView extends ReactComponentOfState<TodoListState> implements IMedi
 	{
 		return jsx('
 			<div>
-				<TodoStatsView message=${state.message}/>
+				<TodoStatsView message=${state.message} addNew=${addNew.dispatch}/>
 				<hr/>
 				<ul>
 					${mapList()}
@@ -89,7 +92,7 @@ class TodoListView extends ReactComponentOfState<TodoListState> implements IMedi
 		if (state.list == null || state.list.size == 0) return null;
 		
 		return [for (todo in state.list)
-			jsx('<TodoView key=${todo.key} todo=$todo/>')
+			jsx('<TodoView key=${todo.key} todo=$todo toggle=${toggle.dispatch}/>')
 		];
 	}
 }

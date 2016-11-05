@@ -65,8 +65,11 @@ class ApplicationContext extends mmvc.impl.Context
 		commandMap.mapSignalClass(LoadTodoList, LoadTodoListCommand);
 
 		injector.mapSingleton(TodoList);
-		
-		// live-reload react components require mapping by string
+
+		// TO RESOLVE: should mediators be included in the index.js or view.js? 
+		// - if mediators are part of index, views have to be mapped by string
+		// - if mediators are part of views, they have to be mapped using a static var (see view)
+		// TO RESOLVE: Compiler exclude is too strict
 		//mediatorMap.mapView('example.todo.view.TodoListView', TodoListViewMediator);
 
 		// wiring for main application module

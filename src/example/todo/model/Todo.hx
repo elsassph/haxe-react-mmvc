@@ -25,6 +25,7 @@ package example.todo.model;
 /**
 	A single todo data object with a name and a done status
 */
+@:expose
 class Todo
 {
 	static private var KEY = 0;

@@ -26,7 +26,8 @@ import react.ReactComponent;
 import react.ReactMacro.jsx;
 
 typedef TodoStatsProps = {
-	message: String
+	message: String,
+	addNew: String -> Void
 }
 
 class TodoStatsView extends ReactComponentOfProps<TodoStatsProps>
@@ -48,6 +49,6 @@ class TodoStatsView extends ReactComponentOfProps<TodoStatsProps>
 	
 	function onClick(_)
 	{
-		trace('add');
+		props.addNew('A new todo');
 	}
 }

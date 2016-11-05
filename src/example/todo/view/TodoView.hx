@@ -28,7 +28,8 @@ import react.ReactMacro.jsx;
 import example.todo.model.Todo;
 
 typedef TodoProps = {
-	todo: Todo
+	todo: Todo,
+	toggle: String -> Void
 };
 
 /**
@@ -48,6 +49,6 @@ class TodoView extends ReactComponentOfProps<TodoProps>
 	
 	function onClick(_) 
 	{
-		trace('toggle');
+		props.toggle(props.todo.key);
 	}
 }
