@@ -42,7 +42,7 @@ class TodoStatsView extends ReactComponentOfProps<TodoStatsProps>
 		return jsx('
 			<div className="statsview">
 				<label>${props.message}</label>
-				<a onClick=$onClick>Add item</a>
+				<a onClick=$onClick tabIndex="0">Add item</a>
 			</div>
 		');
 	}

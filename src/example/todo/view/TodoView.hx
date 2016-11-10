@@ -22,11 +22,10 @@ SOFTWARE.
 
 package example.todo.view;
 
+import example.todo.model.Todo;
 import mmvc.react.IMediatedComponent;
 import react.ReactComponent;
 import react.ReactMacro.jsx;
-
-import example.todo.model.Todo;
 
 typedef TodoProps = {
 	todo: Todo,
@@ -40,9 +39,9 @@ class TodoView extends ReactComponentOfProps<TodoProps> implements IMediatedComp
 {
 	override public function render()
 	{
-		var className = props.todo.done ? 'todoview done' : 'todoview';
+		var className = 'actionable todoview ' + (props.todo.done ? 'done' : '');
 		return jsx('
-			<li className=$className onClick=$onClick>
+			<li className=$className onClick=$onClick tabIndex="0">
 				${props.todo.name}
 			</li>
 		');
