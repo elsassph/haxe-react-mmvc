@@ -33,7 +33,6 @@ typedef TodoListState = {
 	?list: TodoList
 }
 
-@:expose
 class TodoListView extends ReactComponentOfState<TodoListState> implements IMediatedComponent
 {
 	public var addNew:Signal1<String> = new Signal1();

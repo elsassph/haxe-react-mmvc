@@ -49,7 +49,7 @@ class ContextMacro
 		var view = Context.getType(fqcnView);
 		switch (view)
 		{
-			case TInst(_.get() => t, p):
+			case TInst(_.get() => t, _):
 				for (t in t.interfaces)
 				{
 					var interf = t.t.get();

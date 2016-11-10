@@ -3,7 +3,7 @@ common.hxml
 # livereload
 -debug
 -D livereload
---macro Stub.modules()
+--macro Stub.modules(['example.todo.model'])
 
 --each
 

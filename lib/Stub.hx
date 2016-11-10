@@ -4,9 +4,13 @@ package;
 import haxe.io.Path;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
+import haxe.macro.Type;
 import sys.FileSystem;
 import sys.io.File;
 
+/**
+	Modular Haxe JS output processor
+**/
 class Stub
 {
 	#if (haxe_ver < 3.3)
@@ -16,13 +20,43 @@ class Stub
 	static inline var SCOPE = 'typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this';
 	static inline var RE_EXPORT = '\\$$hx_exports\\["([a-z0-9_]+)"] = \\$';
 	#end
+	static var sharedPackages:Array<String>;
 	
-	static public function modules() 
+	static public function modules(sharedPackages:Array<String>) 
 	{
+		// auto-expose all types in the shared packages
+		Stub.sharedPackages = sharedPackages;
+		Context.onGenerate(autoExpose);
+		
+		// patch output for automatic joining of modules scopes
 		Context.onAfterGenerate(generated);
 	}
 	
-	static private function generated() 
+	static function autoExpose(types:Array<haxe.macro.Type>) 
+	{
+		for (type in types) 
+		{
+			switch (type)
+			{
+				case TInst(_.get() => t, _):
+					if (shouldExpose(t.module))
+						t.meta.add(':expose', [], Context.currentPos());
+				case TEnum(_.get() => t, _):
+					if (shouldExpose(t.module))
+						t.meta.add(':expose', [], Context.currentPos());
+				default:
+			}
+		}
+	}
+	
+	static private function shouldExpose(module:String) 
+	{
+		for (pkg in sharedPackages)
+			if (module.indexOf(pkg) == 0) return true;
+		return false;
+	}
+	
+	static function generated() 
 	{
 		var output = Compiler.getOutput();
 		if (!FileSystem.exists(output)) return;
