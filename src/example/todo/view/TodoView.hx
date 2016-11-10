@@ -22,6 +22,7 @@ SOFTWARE.
 
 package example.todo.view;
 
+import mmvc.react.IMediatedComponent;
 import react.ReactComponent;
 import react.ReactMacro.jsx;
 
@@ -35,7 +36,7 @@ typedef TodoProps = {
 /**
 	View for a single Todo model.
 */
-class TodoView extends ReactComponentOfProps<TodoProps>
+class TodoView extends ReactComponentOfProps<TodoProps> implements IMediatedComponent
 {
 	override public function render()
 	{

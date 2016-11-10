@@ -24,6 +24,7 @@ package example.app;
 
 import example.todo.view.TodoListView;
 import mmvc.api.IViewContainer;
+import mmvc.react.ILifecycleListener;
 
 
 // Main Application
@@ -69,6 +70,9 @@ class ApplicationContext extends mmvc.impl.Context
 		commandMap.mapSignalClass(LoadTodoList, LoadTodoListCommand);
 
 		injector.mapSingleton(TodoList);
+		
+		// mediated React views lifecycle consumer
+		injector.mapSingletonOf(ILifecycleListener, FocusManager);
 
 		// wiring mediated React views
 		// note: view classes must be fully qualified!

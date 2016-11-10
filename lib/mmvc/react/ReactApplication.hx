@@ -31,7 +31,6 @@ class ReactApplication implements mmvc.api.IViewContainer
 	}
 }
 
-
 typedef ContextMediatorProps = {
 	var viewAdded:Dynamic -> Void;
 	var viewRemoved:Dynamic -> Void;
@@ -42,6 +41,9 @@ typedef ContextMediatorProps = {
 @:reactContext
 class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 {
+	// lifecycle
+	var listener:ILifecycleListener;
+	
 	static public var childContextTypes = {
 		mediator: React.PropTypes.object.isRequired
 	};
@@ -57,7 +59,7 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 	
 	public function viewAdded(view:ReactElement)
 	{
-		// look for mediator override
+		// livereload: look for mediator override
 		var t = Type.getClass(view);
 		if (Reflect.hasField(t, 'mediatorClass'))
 		{
@@ -69,11 +71,17 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 		}
 		// default mmvc mediation
 		else props.viewAdded(view);
+		
+		// lifecycle
+		if (listener != null) listener.viewAdded(view);
 	}
 	
 	public function viewRemoved(view:ReactElement)
 	{
-		// remove mediator override
+		// lifecycle
+		if (listener != null) listener.viewRemoved(view);
+		
+		// livereload: remove mediator override
 		if (untyped view.__mediator) {
 			var mediator:IMediator = untyped view.__mediator;
 			mediator.preRemove();
@@ -93,6 +101,8 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 	
 	override function render()
 	{
+		listener = props.injector.getInstance(ILifecycleListener);
+		
 		return React.Children.only(props.children);
 	}
 }
