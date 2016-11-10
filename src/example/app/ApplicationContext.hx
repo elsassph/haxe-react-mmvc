@@ -50,8 +50,10 @@ import example.todo.view.TodoListViewMediator;
 	@see mmvc.impl.Context
 */
 
+#if livereload
 // Macro enabling mediated React views live reload
 @:build(mmvc.react.ContextMacro.build())
+#end
 
 class ApplicationContext extends mmvc.impl.Context
 {
@@ -69,11 +71,11 @@ class ApplicationContext extends mmvc.impl.Context
 		// wiring for todo model
 		commandMap.mapSignalClass(LoadTodoList, LoadTodoListCommand);
 
-		injector.mapSingleton(TodoList);
-		
 		// mediated React views lifecycle consumer
 		injector.mapSingletonOf(ILifecycleListener, FocusManager);
-
+		
+		injector.mapSingleton(TodoList);
+		
 		// wiring mediated React views
 		// note: view classes must be fully qualified!
 		mediatorMap.mapView(example.todo.view.TodoListView, TodoListViewMediator);

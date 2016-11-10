@@ -1,0 +1,23 @@
+common.hxml
+
+# livereload
+-debug
+-D livereload
+--macro Stub.modules()
+
+--each
+
+-js bin/index.js
+example.app.ApplicationContext
+-main Main
+--macro exclude('example.todo.view')
+
+--next
+
+-js bin/view.js
+example.app.ApplicationContext
+example.todo.view.TodoListView
+--macro exclude('example.app')
+--macro exclude('example.todo.model')
+--macro exclude('example.todo.command')
+--macro exclude('example.todo.signal')

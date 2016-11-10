@@ -13,9 +13,12 @@ class Require
 	
 	static var loaded:Map<String, Promise<String>> = new Map();
 	static var handlers:Map<String, String -> Void> = new Map();
+	
+	#if livereload
 	static var isHot:Bool;
 	static var dirty:Array<String> = [];
 	static var reloadTimer:Timer;
+	#end
 	
 	/**
 	 * Load JS module
@@ -74,6 +77,10 @@ class Require
 		return p;
 	}
 	
+	#if livereload
+	/**
+		Set livereload handler, either for all modules or a specific module
+	**/
 	static public function hot(?handler:String -> Void, ?forModule:String) 
 	{
 		if (handler != null)
@@ -133,4 +140,5 @@ class Require
 		if (handlers.exists(module))
 			handlers.get(module)(module);
 	}
+	#end
 }

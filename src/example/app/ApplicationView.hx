@@ -21,13 +21,13 @@ SOFTWARE.
 */
 
 package example.app;
+
 import example.todo.view.TodoListView;
 import js.Browser;
 import js.html.DivElement;
 import mmvc.react.ReactApplication;
 import react.ReactDOM;
 import react.ReactMacro.jsx;
-
 
 /**
 	Main Application View.
@@ -58,10 +58,12 @@ class ApplicationView extends ReactApplication
 		root = doc.createDivElement();
 		doc.body.appendChild(root);
 		
-		//render(); // non-hot
-		
+		#if livereload
 		Require.module('view', false).then(render);
 		Require.hot(render);
+		#else
+		render(); // non-hot
+		#end
 	}
 	
 	function render(?_) 

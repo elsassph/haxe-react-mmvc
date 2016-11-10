@@ -59,7 +59,8 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 	
 	public function viewAdded(view:ReactElement)
 	{
-		// livereload: look for mediator override
+		#if livereload
+		// look for mediator override
 		var t = Type.getClass(view);
 		if (Reflect.hasField(t, 'mediatorClass'))
 		{
@@ -69,8 +70,10 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 			mediator.preRegister();
 			untyped view.__mediator = mediator;
 		}
-		// default mmvc mediation
-		else props.viewAdded(view);
+		else 
+		#end
+		// mmvc mediation
+		props.viewAdded(view);
 		
 		// lifecycle
 		if (listener != null) listener.viewAdded(view);
@@ -81,15 +84,18 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 		// lifecycle
 		if (listener != null) listener.viewRemoved(view);
 		
-		// livereload: remove mediator override
+		#if livereload
+		// remove mediator override
 		if (untyped view.__mediator) {
 			var mediator:IMediator = untyped view.__mediator;
 			mediator.preRemove();
 			mediator.setViewComponent(null);
 			untyped view.__mediator = null;
 		}
-		// default mmvc mediation
-		else props.viewRemoved(view);
+		else 
+		#end
+		// mmvc mediation
+		props.viewRemoved(view);
 	}
 
 	public function getChildContext()
