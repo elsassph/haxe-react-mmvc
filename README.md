@@ -10,7 +10,7 @@ Overview
 -----------
 
 This is a partially implemented Todo application, demonstrating the core 
-elements of MMVC 
+elements of MMVC:
 
 * configuring application via a Context (`ApplicationContext`)
 * loads a list of Todos from a file via a Command (`LoadTodoListCommand`)
@@ -18,6 +18,16 @@ elements of MMVC
 * triggering commands via a Signal and listens to responses (`LoadTodoList`)
 * instanciating Mediators for registered Views (`ApplicationViewMediator`, 
   `TodoListViewMediator`)
+* adding a "lifecycle consumer" for the mediated components, allowing 
+  a controller to see all the components added/removed.
+
+
+The application is also live-reload capable for fast iteration:
+
+* 2 JS files are created; one with the core app (context and models), 
+  and one with the React views and their mediators.
+* shared classes (like models) must be marked as such (see `livereload.hxml`),
+  everything else should be stricly provided through dependency injection.
 
 
 Building the app
@@ -28,14 +38,18 @@ Install libraries:
 	haxelib install react
 	haxelib install mmvc
 
-Compile via the hxml file:
+Compile for live-reload via the hxml file:
 
-	haxe build.hxml
+	haxe livereload.hxml
 
 Serve with live-reload:
 	
 	npm install -g livereloadx
 	livereloadx -s bin
+
+Release build as a single JS file:
+	
+	haxe build.hxml
 
 
 Application Structure
@@ -52,6 +66,7 @@ The application source contains the following classes:
 			ApplicationContext.hx       // application Context
 			ApplicationView.hx          // application View
 			ApplicationViewMediator.hx	// application Mediator
+			FocusManager.hx             // application lifecycle listener
 
 		/todo
 
