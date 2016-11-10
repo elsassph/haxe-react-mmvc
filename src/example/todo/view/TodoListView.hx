@@ -36,9 +36,6 @@ typedef TodoListState = {
 @:expose
 class TodoListView extends ReactComponentOfState<TodoListState> implements IMediatedComponent
 {
-	// ship mediator with view for code-splitting / live-reload
-	static var mediatorClass = TodoListViewMediator; 
-	
 	public var addNew:Signal1<String> = new Signal1();
 	public var toggle:Signal1<String> = new Signal1();
 	

@@ -22,6 +22,7 @@ SOFTWARE.
 
 package example.app;
 
+import example.todo.view.TodoListView;
 import mmvc.api.IViewContainer;
 
 
@@ -33,7 +34,6 @@ import example.app.ApplicationViewMediator;
 import example.todo.signal.LoadTodoList;
 import example.todo.command.LoadTodoListCommand;
 import example.todo.model.TodoList;
-//import example.todo.view.TodoListView;
 import example.todo.view.TodoListViewMediator;
 
 
@@ -48,6 +48,10 @@ import example.todo.view.TodoListViewMediator;
 	</p>
 	@see mmvc.impl.Context
 */
+
+// Macro enabling mediated React views live reload
+@:build(mmvc.react.ContextMacro.build())
+
 class ApplicationContext extends mmvc.impl.Context
 {
 	public function new(?contextView:IViewContainer=null)
@@ -66,11 +70,9 @@ class ApplicationContext extends mmvc.impl.Context
 
 		injector.mapSingleton(TodoList);
 
-		// TO RESOLVE: should mediators be included in the index.js or view.js? 
-		// - if mediators are part of index, views have to be mapped by string
-		// - if mediators are part of views, they have to be mapped using a static var (see view)
-		// TO RESOLVE: Compiler exclude is too strict
-		//mediatorMap.mapView('example.todo.view.TodoListView', TodoListViewMediator);
+		// wiring mediated React views
+		// note: view classes must be fully qualified!
+		mediatorMap.mapView(example.todo.view.TodoListView, TodoListViewMediator);
 
 		// wiring for main application module
 		mediatorMap.mapView(ApplicationView, ApplicationViewMediator);

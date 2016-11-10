@@ -1,5 +1,6 @@
 package;
 
+import haxe.Timer;
 import js.Browser;
 import js.html.LinkElement;
 import js.html.ScriptElement;
@@ -13,6 +14,8 @@ class Require
 	static var loaded:Map<String, Promise<String>> = new Map();
 	static var handlers:Map<String, String -> Void> = new Map();
 	static var isHot:Bool;
+	static var dirty:Array<String> = [];
+	static var reloadTimer:Timer;
 	
 	/**
 	 * Load JS module
@@ -94,19 +97,35 @@ class Require
 	{
 		if (path.indexOf('.js') > 0) {
 			var module = path.split('.')[0];
-			if (loaded.exists(module)) {
-				var script = Browser.document.querySelector('script[src$="$path"]');
-				if (script != null) script.remove();
-				loaded.remove(module);
-				
-				Require.module(module, false).then(function(id) {
-					trigger(module);
-					trigger('*');
-				});
+			if (loaded.exists(module) && dirty.indexOf(module) < 0) {
+				dirty.push(module);
+				if (reloadTimer == null) reloadTimer = Timer.delay(reloadDirty, 100);
 			}
 			return true;
 		}
 		return false;
+	}
+	
+	static function reloadDirty()
+	{
+		var modules = dirty;
+		dirty = [];
+		reloadTimer = null;
+		trace('Reloading ${modules}...');
+		
+		Promise.all([for (module in modules) {
+			var script = Browser.document.querySelector('script[src$="$module.js"]');
+			if (script != null) script.remove();
+			loaded.remove(module);
+			Require.module(module, false);
+		}])
+		.then(function(_) {
+			for (module in modules) {
+				trace('Module [$module] reloaded');
+				trigger(module);
+			}
+			trigger('*');
+		});
 	}
 	
 	static function trigger(module:String) 

@@ -6,20 +6,22 @@
 -D react_global
 
 -debug
-#-dce full
 
 --macro Stub.modules()
 
 --each
 
--js bin/view.js
-example.todo.view.TodoListView
---macro exclude('example.todo.model')
---macro exclude('example.todo.command')
---macro exclude('example.todo.signal')
+-js bin/index.js
+example.app.ApplicationContext
+-main Main
+--macro exclude('example.todo.view')
 
 --next
 
--js bin/index.js
--main Main
---macro exclude('example.todo.view')
+-js bin/view.js
+example.app.ApplicationContext
+example.todo.view.TodoListView
+--macro exclude('example.app')
+--macro exclude('example.todo.model')
+--macro exclude('example.todo.command')
+--macro exclude('example.todo.signal')

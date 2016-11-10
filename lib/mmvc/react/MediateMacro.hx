@@ -3,18 +3,47 @@ package mmvc.react;
 #if macro
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.Type.ClassType;
 
 class MediateMacro
 {
+	// map is populated by ContextMacro by looking up the mediateMap.mapView() calls
+	static public var map:Map<String, String> = new Map();
+	
 	static public function build() 
 	{
 		var fields = Context.getBuildFields();
+		
+		addMediator(fields);
 		
 		if (!updateMount(fields)) addMount(fields);
 		if (!updateUnmount(fields)) addUnmount(fields);
 		addContextTypes(fields);
 		
 		return fields;
+	}
+	
+	static function addMediator(fields:Array<Field>) 
+	{
+		var fqcn = getFQCN();
+		if (map.exists(fqcn))
+		{
+			// add static reference to mediator to "ship" the mediator with the view
+			var mediator = Context.parse(map.get(fqcn), Context.currentPos());
+			fields.push({
+				name: 'mediatorClass',
+				access: [APublic, AStatic],
+				kind: FVar(null, mediator),
+				pos: Context.currentPos()
+			});
+		}
+	}
+	
+	static function getFQCN()
+	{
+		var t:ClassType = Context.getLocalClass().get();
+		if (t.module.indexOf('.${t.name}') > 0) return t.module;
+		else return t.module + '.${t.name}';
 	}
 	
 	static function addContextTypes(fields:Array<Field>) 
@@ -24,7 +53,7 @@ class MediateMacro
 		};
 		fields.push({
 			name: 'contextTypes',
-			access: [Access.APublic, Access.AStatic],
+			access: [APublic, AStatic],
 			kind: FVar(null, contextTypes),
 			pos: Context.currentPos()
 		});
@@ -40,7 +69,7 @@ class MediateMacro
 		
 		fields.push({
 			name: 'componentWillUnmount',
-			access: [Access.APublic, Access.AOverride],
+			access: [APublic, AOverride],
 			kind: FFun(componentWillUnmount),
 			pos: Context.currentPos()
 		});
@@ -76,7 +105,7 @@ class MediateMacro
 		
 		fields.push({
 			name: 'componentDidMount',
-			access: [Access.APublic, Access.AOverride],
+			access: [APublic, AOverride],
 			kind: FFun(componentDidMount),
 			pos: Context.currentPos()
 		});
