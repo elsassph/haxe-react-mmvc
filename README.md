@@ -4,6 +4,9 @@ Todo App
 This is a simple application demonstrating the main components of MMVC
 as it could be used in a React JS application.
 
+MMVC is a port of the ActionScript 3 RobotLegs MVC framework with signals and 
+Haxe refinements. It offers a powerful Dependency Injection system for React JS.
+
 > This application requires Haxe 3.2.1 or greater.
 
 Overview
@@ -18,9 +21,8 @@ elements of MMVC:
 * triggering commands via a Signal and listens to responses (`LoadTodoList`)
 * instanciating Mediators for registered Views (`ApplicationViewMediator`, 
   `TodoListViewMediator`)
-* adding a "lifecycle consumer" for the mediated components, allowing 
-  a controller to see all the components added/removed.
-
+* configuring a "React lifecycle consumer" for the mediated components, allowing 
+  a shared controller (`FocusManager`) to see all the components added/removed.
 
 The application is also live-reload capable for fast iteration:
 
@@ -34,7 +36,7 @@ Building the app
 ----------------
 
 Install libraries:
-	
+
 	haxelib install react
 	haxelib install mmvc
 
@@ -65,7 +67,7 @@ The application source contains the following classes:
 
 			ApplicationContext.hx       // application Context
 			ApplicationView.hx          // application View
-			ApplicationViewMediator.hx	// application Mediator
+			ApplicationViewMediator.hx  // application Mediator
 			FocusManager.hx             // application lifecycle listener
 
 		/todo

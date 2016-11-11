@@ -25,6 +25,7 @@ class Stub
 	static public function modules(sharedPackages:Array<String>) 
 	{
 		// auto-expose all types in the shared packages
+		// note: Enums can NOT be exposed
 		Stub.sharedPackages = sharedPackages;
 		Context.onGenerate(autoExpose);
 		
@@ -39,9 +40,6 @@ class Stub
 			switch (type)
 			{
 				case TInst(_.get() => t, _):
-					if (shouldExpose(t.module))
-						t.meta.add(':expose', [], Context.currentPos());
-				case TEnum(_.get() => t, _):
 					if (shouldExpose(t.module))
 						t.meta.add(':expose', [], Context.currentPos());
 				default:

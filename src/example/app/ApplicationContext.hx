@@ -22,19 +22,14 @@ SOFTWARE.
 
 package example.app;
 
-import example.todo.view.TodoListView;
 import mmvc.api.IViewContainer;
 import mmvc.react.ILifecycleListener;
-
-
-// Main Application
-import example.app.ApplicationView;
-import example.app.ApplicationViewMediator;
 
 // TODO Module
 import example.todo.signal.LoadTodoList;
 import example.todo.command.LoadTodoListCommand;
 import example.todo.model.TodoList;
+import example.todo.view.TodoListView;
 import example.todo.view.TodoListViewMediator;
 
 
@@ -68,12 +63,11 @@ class ApplicationContext extends mmvc.impl.Context
 	*/
 	override public function startup()
 	{
-		// wiring for todo model
-		commandMap.mapSignalClass(LoadTodoList, LoadTodoListCommand);
-
 		// mediated React views lifecycle consumer
 		injector.mapSingletonOf(ILifecycleListener, FocusManager);
 		
+		// wiring for todo model
+		commandMap.mapSignalClass(LoadTodoList, LoadTodoListCommand);
 		injector.mapSingleton(TodoList);
 		
 		// wiring mediated React views
