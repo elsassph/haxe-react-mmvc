@@ -7,7 +7,8 @@ as it could be used in a React JS application.
 MMVC is a port of the ActionScript 3 RobotLegs MVC framework with signals and 
 Haxe refinements. It offers a powerful Dependency Injection system for React JS.
 
-> This application requires Haxe 3.2.1 or greater.
+> This application requires Haxe 3.2.1 or greater
+> and https://github.com/massiveinteractive/haxe-react
 
 Overview
 -----------
@@ -59,11 +60,21 @@ Application Structure
 
 The application source contains the following classes:
 
-	Main.hx // main entry point, instanciates application view and context
+### /lib
+
+	Require.hx     // Lazy loading and live-reload of Haxe-JS modules
+    Stub.hx        // Build macro to export modular Haxe-JS 
+
+	/mcore         // Observable collections
+	/mmvc          // MMVC+React support classes
+
+### /src
+
+	Main.hx   // main entry point, instantiates application view and context
 
 	/example
 
-		/app // main application module
+		/app  // main application module
 
 			ApplicationContext.hx       // application Context
 			ApplicationView.hx          // application View
@@ -82,6 +93,28 @@ The application source contains the following classes:
 			/view
 				TodoListView.hx         // View for TodoList
 				TodoListViewMediator.hx // Mediator for TodoList. Triggers call to LoadTodoList
-				TodoView.hx             // View for inidividual Todo items
+				TodoView.hx             // View for individual Todo items
 				TodoStatsView.hx        // Summary of current todo list + button to create new Todo
 	
+
+Haxe magic
+----------
+
+### Live-reload
+
+Live-reload is implemented very simply, just using the "off the shelf" LiveReload servers and 
+client libraries. LiveReload client API offers hooks to be notified of local file changes.
+
+Haxe JS code-splitting is based on https://github.com/elsassph/modular-haxe-example
+
+
+### Mediators live-reload
+
+MVC isn't an approach which normally should be friendly with live-reload, but thanks to a 
+good dose of Haxe macros magic, mediators can become live-reloadable!
+
+- Mediator-view mappings are "extracted" from the monolithic context by the `ContextMacro`,
+- Mediation is provided through a wrapper React component `ContextMediator` (see class
+  `ReactApplication`) and logic injected in React components by the `MediateMacro`.
+- Mediator is "shipped" with the view (as a generated static reference) so it can be 
+  lazily loaded, and thus live-reloaded!

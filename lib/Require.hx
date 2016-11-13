@@ -1,5 +1,3 @@
-package;
-
 import haxe.Timer;
 import js.Browser;
 import js.html.LinkElement;

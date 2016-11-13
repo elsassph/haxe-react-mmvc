@@ -1,5 +1,3 @@
-package;
-
 #if macro
 import haxe.io.Path;
 import haxe.macro.Compiler;
