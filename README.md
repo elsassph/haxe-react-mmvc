@@ -7,8 +7,12 @@ as it could be used in a React JS application.
 MMVC is a port of the ActionScript 3 RobotLegs MVC framework with signals and 
 Haxe refinements. It offers a powerful Dependency Injection system for React JS.
 
+MMVC is a "battle tested" library, used since 2012 to build dozens of complex Haxe JS 
+applications on all kind of platforms, from browsers to consoles and slow smart TVs.
+
 > This application requires Haxe 3.2.1 or greater
 > and https://github.com/massiveinteractive/haxe-react
+> and https://github.com/massiveinteractive/mmvc
 
 Overview
 -----------
@@ -118,3 +122,10 @@ good dose of Haxe macros magic, mediators can become live-reloadable!
   `ReactApplication`) and logic injected in React components by the `MediateMacro`.
 - Mediator is "shipped" with the view (as a generated static reference) so it can be 
   lazily loaded, and thus live-reloaded!
+
+
+Polyfills for non-modern browsers
+---------------------------------
+
+This project loads `core-js` and `dom4` libraries to polyfill modern JS and DOM features
+(see `index.html`).
