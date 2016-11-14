@@ -6,6 +6,15 @@ import react.React;
 import react.ReactComponent;
 import react.ReactMacro.jsx;
 
+/**
+	Base class for the root view of a React MMVC application
+	React rendering should be wrapped by the `mediate` function:
+	
+		override function render() {
+			return ReactDOM.render( mediate(jsx('<MyApp/>')), root);
+		}
+	
+**/
 class ReactApplication implements mmvc.api.IViewContainer
 {
 	public var viewAdded:Dynamic -> Void;
@@ -16,6 +25,9 @@ class ReactApplication implements mmvc.api.IViewContainer
 	{
 	}
 	
+	/**
+		Wrap React root with a context/mediator provider
+	**/
 	public function mediate(child:ReactElement)
 	{
 		return jsx('
@@ -31,6 +43,9 @@ class ReactApplication implements mmvc.api.IViewContainer
 	}
 }
 
+
+/* CONTEXT MEDIATOR */
+
 typedef ContextMediatorProps = {
 	var viewAdded:Dynamic -> Void;
 	var viewRemoved:Dynamic -> Void;
@@ -38,7 +53,16 @@ typedef ContextMediatorProps = {
 	var children:Dynamic;
 }
 
-@:reactContext
+/**
+	ContextMediator provides the viewAdded/viewRemoved methods allowing the 
+	automatic creation of mediators when components are added/removed.
+	
+	For lazy-loading/live-reload, the mediator is looked up as a static 
+	`mediatorClass` property of the view class.
+	
+	Additionally, if a ILifecycleListener is in the context, it will also
+	be called when components are added/removed.
+**/
 class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 {
 	// lifecycle

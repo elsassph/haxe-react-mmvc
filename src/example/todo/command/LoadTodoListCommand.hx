@@ -25,10 +25,9 @@ package example.todo.command;
 import example.todo.signal.LoadTodoList;
 import example.todo.model.TodoList;
 import example.todo.model.Todo;
+import haxe.Http;
+import haxe.Json;
 import haxe.Timer;
-
-import mcore.loader.Loader;
-import mcore.loader.JSONLoader;
 
 /**
 Loads an existing todo list from the file system,
@@ -46,7 +45,7 @@ class LoadTodoListCommand extends mmvc.impl.Command
 	@inject
 	public var loadTodoList:LoadTodoList;
 
-	var loader:JSONLoader;
+	var loader:Http;
 
 	public function new()
 	{
@@ -64,12 +63,12 @@ class LoadTodoListCommand extends mmvc.impl.Command
 		}
 		else 
 		{
-			loader = new JSONLoader("data/data.json");
-			loader.completed.addOnce(completed);
-			loader.failed.addOnce(failed);
+			loader = new Http("data/data.json");
+			loader.onData = completed;
+			loader.onError = failed;
 			Timer.delay(function() {
-				loader.load();
-			}, 2000);
+				loader.request();
+			}, 1000);
 		}
 	}
 
@@ -79,11 +78,11 @@ class LoadTodoListCommand extends mmvc.impl.Command
 
 	@param data 	raw json object
 	*/
-	function completed(data:Dynamic)
+	function completed(raw:String)
 	{
-		loader.failed.remove(failed);
+		var data = Json.parse(raw);
 
-		var items:Array<Dynamic> = cast data.items;
+		var items:Array<Dynamic> = data.items;
 		list.clear();
 
 		for(item in items)
@@ -99,10 +98,8 @@ class LoadTodoListCommand extends mmvc.impl.Command
 	/**
 	Dispatches failed signal if JSONLoader is unsuccessful
 	*/
-	function failed(error:LoaderError)
+	function failed(error)
 	{
-		loader.completed.remove(completed);
-
 		loadTodoList.failed.dispatch(Std.string(error));
 	}
 }
