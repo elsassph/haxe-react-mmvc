@@ -53,6 +53,9 @@ Compile them into `bin/libs.js` for development:
 
 	npm run libs:dev
 
+See [Adding NPM dependencies](https://github.com/elsassph/haxe-react-redux/#adding-npm-dependencies) for a detailed process.
+
+
 ### Live-reload
 
 Any LiveReload-compatible client/server should work but the simplest is `livereloadx`:
