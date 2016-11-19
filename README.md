@@ -1,5 +1,4 @@
-Todo App
-============
+# Todo App
 
 This is a simple application demonstrating the main components of MMVC
 as it could be used in a React JS application.
@@ -10,12 +9,9 @@ Haxe refinements. It offers a powerful Dependency Injection system for React JS.
 MMVC is a "battle tested" library, used since 2012 to build dozens of complex Haxe JS 
 applications on all kind of platforms, from browsers to consoles and slow smart TVs.
 
-> This application requires Haxe 3.2.1 or greater
-> and https://github.com/massiveinteractive/haxe-react
-> and https://github.com/massiveinteractive/mmvc
+> This application requires NPM and Haxe 3.2.1 or greater
 
-Overview
------------
+## Overview
 
 This is a partially implemented Todo application, demonstrating the core 
 elements of MMVC:
@@ -31,36 +27,64 @@ elements of MMVC:
 
 The application is also live-reload capable for fast iteration:
 
-* 2 JS files are created; one with the core app (context and models), 
+* 2 JS bundles are created; one with the core app (context and models), 
   and one with the React views and their mediators.
 * shared classes (like models) must be marked as such (see `livereload.hxml`),
-  everything else should be stricly provided through dependency injection.
+  everything else should be stricly provided through dependency injection. 
 
+NPM dependencies are bundled into one JS file shared between the Haxe-JS bundles.
 
-Building the app
-----------------
+### Installation
 
-Install libraries:
+Install NPM libraries:
+
+	npm install
+
+Install Haxe libraries
 
 	haxelib install react
 	haxelib install mmvc
 
-Compile for live-reload via the hxml file:
+### NPM dependencies
 
-	haxe livereload.hxml
+NPM libraries are referenced in `src/libs.js` - add libraries your Haxe code will need.
 
-Serve with live-reload:
-	
+Compile them into `bin/libs.js` for development:
+
+	npm run libs:dev
+
+### Live-reload
+
+Any LiveReload-compatible client/server should work but the simplest is `livereloadx`:
+
 	npm install -g livereloadx
 	livereloadx -s bin
 
-Release build as a single JS file:
-	
-	haxe build.hxml
+Point your browser to `http://localhost:35729`
+
+Build Haxe-JS bundles (manually, no watcher): 
+
+	haxe livereload.hxml
+
+That's all - no Webpack dark magic needed.
+
+### Release build
+
+Release build as a single Haxe-JS bundle:
+
+	npm run release
+
+This command does: 
+
+- remove JS/MAP files in `bin/`, 
+- build and minify `libs.js`
+- build and minify `index.js` 
+
+This is obviously a naive setup - you'll probably want to add some SCSS/LESS and 
+assets preprocessors.
 
 
-Application Structure
----------------------
+## Application Structure
 
 The application source contains the following classes:
 
@@ -99,10 +123,15 @@ The application source contains the following classes:
 				TodoListViewMediator.hx // Mediator for TodoList. Triggers call to LoadTodoList
 				TodoView.hx             // View for individual Todo items
 				TodoStatsView.hx        // Summary of current todo list + button to create new Todo
-	
 
-Haxe magic
-----------
+
+## Polyfills
+
+This project loads (if needed) `core-js` and `dom4` libraries to polyfill modern JS and DOM 
+features (see `index.html`).
+
+
+## Haxe magic
 
 ### Live-reload
 
@@ -122,10 +151,3 @@ good dose of Haxe macros magic, mediators can become live-reloadable!
   `ReactApplication`) and logic injected in React components by the `MediateMacro`.
 - Mediator is "shipped" with the view (as a generated static reference) so it can be 
   lazily loaded, and thus live-reloaded!
-
-
-Polyfills for non-modern browsers
----------------------------------
-
-This project loads `core-js` and `dom4` libraries to polyfill modern JS and DOM features
-(see `index.html`).

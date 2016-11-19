@@ -20,7 +20,7 @@ class Stub
 	#end
 	static var sharedPackages:Array<String>;
 	
-	static public function modules(sharedPackages:Array<String>) 
+	static public function modules(?sharedPackages:Array<String>) 
 	{
 		// auto-expose all types in the shared packages
 		// note: Enums can NOT be exposed
@@ -47,6 +47,7 @@ class Stub
 	
 	static private function shouldExpose(module:String) 
 	{
+		if (sharedPackages == null) return false;
 		for (pkg in sharedPackages)
 			if (module.indexOf(pkg) == 0) return true;
 		return false;
@@ -81,8 +82,21 @@ class Stub
 		// process output
 		src = addInjections(refs, indexes, src);
 		src = addJoinPoint(src);
+		src = addRequire(src);
 		
 		File.saveContent(output, src);
+	}
+	
+	/**
+	 * Provide a `require` function which will lookup modules in the shared registry
+	 */
+	static function addRequire(src:String) 
+	{
+		var p = src.indexOf('"use strict"');
+		if (p < 0) return src;
+		return src.substr(0, p + 12)
+			+ '; var require = (function(r){return function require(m){return r[m];}})($$hx_exports.__registry__)'
+			+ src.substr(p + 12);
 	}
 	
 	/**

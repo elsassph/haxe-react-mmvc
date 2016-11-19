@@ -1,6 +1,7 @@
+-lib mmvc
+-lib react
+
 -cp lib
 -cp src
 
--lib mmvc
--lib react
--D react_global
+--macro Stub.modules(['example.todo.model'])
