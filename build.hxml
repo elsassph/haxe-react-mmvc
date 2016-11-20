@@ -1,5 +1,8 @@
 common.hxml
 
+# no auto-expose
+--macro Stub.modules()
+
 # single JS release output
 -js bin/index.js
 -main Main

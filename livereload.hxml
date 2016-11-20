@@ -3,12 +3,17 @@ common.hxml
 -debug
 -D livereload
 
+# auto-expose models
+--macro Stub.modules(['example.todo.model'])
+
+
 --each
 
 -js bin/index.js
 example.app.ApplicationContext
 -main Main
 --macro exclude('example.todo.view')
+
 
 --next
 

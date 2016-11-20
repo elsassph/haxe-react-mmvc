@@ -27,6 +27,7 @@ elements of MMVC:
 
 The application is also live-reload capable for fast iteration:
 
+* read carefully: https://github.com/elsassph/haxe-modular
 * 2 JS bundles are created; one with the core app (context and models), 
   and one with the React views and their mediators.
 * shared classes (like models) must be marked as such (see `livereload.hxml`),

@@ -1,7 +1,6 @@
+-lib modular
 -lib mmvc
 -lib react
 
 -cp lib
 -cp src
-
---macro Stub.modules(['example.todo.model'])
