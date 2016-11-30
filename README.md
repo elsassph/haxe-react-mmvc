@@ -43,8 +43,7 @@ Install NPM libraries:
 
 Install Haxe libraries
 
-	haxelib install react
-	haxelib install mmvc
+	haxelib install common.hxml
 
 ### NPM dependencies
 

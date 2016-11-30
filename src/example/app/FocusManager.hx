@@ -26,7 +26,7 @@ class FocusManager implements ILifecycleListener
 			dom.addEventListener('keydown', function(e:KeyboardEvent) {
 				if (e.keyCode == 32) 
 				{
-					var me = new MouseEvent('click', {
+					var me = new MouseEvent('click', cast {
 						view: Browser.window,
 						bubbles: true,
 						cancelable: true
