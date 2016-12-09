@@ -1,4 +1,5 @@
 -lib modular
+-lib minject
 -lib mmvc
 -lib react
 
