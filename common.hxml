@@ -1,7 +1,0 @@
--lib modular
--lib minject
--lib mmvc
--lib react
-
--cp lib
--cp src
