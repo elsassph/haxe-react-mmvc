@@ -1,15 +1,16 @@
 # Todo App
 
 This is a simple application demonstrating the main components of MMVC
-as it could be used in a React JS application.
+as it could be used in a React JS application. With hot-reload.
 
 MMVC is a port of the ActionScript 3 RobotLegs MVC framework with signals and 
 Haxe refinements. It offers a powerful Dependency Injection system for React JS.
 
-MMVC is a "battle tested" library, used since 2012 to build dozens of complex Haxe JS 
+MMVC is a "battle tested" library, used since 2012 to build dozens of large Haxe JS 
 applications on all kind of platforms, from browsers to consoles and slow smart TVs.
 
 > This application requires NPM and Haxe 3.2.1 or greater
+
 
 ## Overview
 
@@ -25,15 +26,12 @@ elements of MMVC:
 * configuring a "React lifecycle consumer" for the mediated components, allowing 
   a shared controller (`FocusManager`) to see all the components added/removed.
 
-The application is also live-reload capable for fast iteration:
+The application is also hot-reload capable for fast iteration:
 
 * read carefully: https://github.com/elsassph/haxe-modular
-* 2 JS bundles are created; one with the core app (context and models), 
-  and one with the React views and their mediators.
-* shared classes (like models) must be marked as such (see `livereload.hxml`),
-  everything else should be stricly provided through dependency injection. 
 
 NPM dependencies are bundled into one JS file shared between the Haxe-JS bundles.
+
 
 ### Installation
 
@@ -43,7 +41,19 @@ Install NPM libraries:
 
 Install Haxe libraries
 
-	haxelib install common.hxml
+	haxelib install react
+	haxelib install react-router
+	haxelib install mmvc
+	haxelib install minject
+	haxelib install msignal
+
+For more information about the libraries:
+
+- https://github.com/massiveinteractive/haxe-react
+- https://github.com/elsassph/haxe-react-router
+- https://github.com/massiveinteractive/mmvc
+- https://github.com/massiveinteractive/minject
+- https://github.com/massiveinteractive/msignal
 
 ### NPM dependencies
 
@@ -60,14 +70,13 @@ See [Adding NPM dependencies](https://github.com/elsassph/haxe-react-redux/#addi
 
 Any LiveReload-compatible client/server should work but the simplest is `livereloadx`:
 
-	npm install -g livereloadx
-	livereloadx -s bin
+	npm run serve
 
 Point your browser to `http://localhost:35729`
 
-Build Haxe-JS bundles (manually, no watcher): 
+(re)Build the Haxe-JS for hot-reload: 
 
-	haxe livereload.hxml
+	haxe build.hxml -debug
 
 That's all - no Webpack dark magic needed.
 
@@ -79,9 +88,9 @@ Release build as a single Haxe-JS bundle:
 
 This command does: 
 
-- remove JS/MAP files in `bin/`, 
+- remove JS/MAP files in `bin/`
 - build and minify `libs.js`
-- build and minify `index.js` 
+- build and minify the Haxe JS bundles 
 
 This is obviously a naive setup - you'll probably want to add some SCSS/LESS and 
 assets preprocessors.
@@ -93,10 +102,7 @@ The application source contains the following classes:
 
 ### /lib
 
-	Require.hx     // Lazy loading and live-reload of Haxe-JS modules
-    Stub.hx        // Build macro to export modular Haxe-JS 
-
-	/mcore         // Observable collections
+	/mcore         // Some observable collections
 	/mmvc          // MMVC+React support classes
 
 ### /src
@@ -126,6 +132,7 @@ The application source contains the following classes:
 				TodoListViewMediator.hx // Mediator for TodoList. Triggers call to LoadTodoList
 				TodoView.hx             // View for individual Todo items
 				TodoStatsView.hx        // Summary of current todo list + button to create new Todo
+				AboutView.hx            // View for About page
 
 
 ## Polyfills
@@ -136,12 +143,17 @@ features (see `index.html`).
 
 ## Haxe magic
 
-### Live-reload
+### Code splitting and live-reload
 
 Live-reload is implemented very simply, just using the "off the shelf" LiveReload servers and 
 client libraries. LiveReload client API offers hooks to be notified of local file changes.
 
-Haxe JS code-splitting is based on https://github.com/elsassph/modular-haxe-example
+Haxe JS code-splitting is based on https://github.com/elsassph/haxe-modular and 
+leverages [react-proxy](https://github.com/gaearon/react-proxy/tree/master) for live-reload
+without state loss.
+
+The entire setup of splitting by "route" and live-reload can be seen in the 
+main `render` function which directly references the React component classes.
 
 
 ### Mediators live-reload
@@ -154,3 +166,9 @@ good dose of Haxe macros magic, mediators can become live-reloadable!
   `ReactApplication`) and logic injected in React components by the `MediateMacro`.
 - Mediator is "shipped" with the view (as a generated static reference) so it can be 
   lazily loaded, and thus live-reloaded!
+
+
+### Adding NPM dependencies
+
+It's quite easy, follow the explanations here: 
+https://github.com/elsassph/haxe-react-redux/

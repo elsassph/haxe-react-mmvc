@@ -83,7 +83,7 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 	
 	public function viewAdded(view:ReactElement)
 	{
-		#if livereload
+		#if debug
 		// look for mediator override
 		var t = Type.getClass(view);
 		if (Reflect.hasField(t, 'mediatorClass'))
@@ -108,7 +108,7 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 		// lifecycle
 		if (listener != null) listener.viewRemoved(view);
 		
-		#if livereload
+		#if debug
 		// remove mediator override
 		if (untyped view.__mediator) {
 			var mediator:IMediator = untyped view.__mediator;
