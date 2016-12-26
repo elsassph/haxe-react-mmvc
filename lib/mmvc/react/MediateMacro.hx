@@ -12,9 +12,6 @@ class MediateMacro
 	
 	static public function build() 
 	{
-		var type:ClassType = Context.getLocalClass().get();
-		type.meta.add(':expose', [], Context.currentPos());
-		
 		var fields = Context.getBuildFields();
 		
 		addMediator(fields);
@@ -67,7 +64,7 @@ class MediateMacro
 		var componentWillUnmount = {
 			args: [],
 			ret: macro :Void,
-			expr: macro this.context.mediator.viewRemoved(this)
+			expr: exprUnmount()
 		}
 		
 		fields.push({
@@ -88,7 +85,7 @@ class MediateMacro
 					case FFun(f):
 						f.expr = macro {
 							${f.expr}
-							this.context.mediator.viewRemoved(this);
+							${exprUnmount()};
 						};
 						return true;
 					default:
@@ -98,12 +95,17 @@ class MediateMacro
 		return false;
 	}
 	
+	static function exprUnmount() 
+	{
+		return macro this.context.mediator.viewRemoved(this);
+	}
+	
 	static function addMount(fields:Array<Field>) 
 	{
 		var componentDidMount = {
 			args: [],
 			ret: macro :Void,
-			expr: macro this.context.mediator.viewAdded(this)
+			expr: exprMount()
 		}
 		
 		fields.push({
@@ -123,7 +125,7 @@ class MediateMacro
 				switch (field.kind) {
 					case FFun(f):
 						f.expr = macro {
-							this.context.mediator.viewAdded(this);
+							${exprMount()}
 							${f.expr}
 						};
 						return true;
@@ -132,6 +134,11 @@ class MediateMacro
 			}
 		}
 		return false;
+	}
+	
+	static function exprMount() 
+	{
+		return macro this.context.mediator.viewAdded(this);
 	}
 }
 #end

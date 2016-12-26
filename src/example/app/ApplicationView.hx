@@ -22,12 +22,16 @@ SOFTWARE.
 
 package example.app;
 
+import example.todo.view.AboutView;
 import example.todo.view.TodoListView;
 import js.Browser;
 import js.html.DivElement;
 import mmvc.react.ReactApplication;
 import react.ReactDOM;
 import react.ReactMacro.jsx;
+import router.Link;
+import router.ReactRouter;
+import router.RouteComponentProps;
 
 /**
 	Main Application View.
@@ -58,16 +62,38 @@ class ApplicationView extends ReactApplication
 		root = doc.createDivElement();
 		doc.body.appendChild(root);
 		
-		#if livereload
-		Require.module('view').then(render);
-		Require.hot(render);
-		#else
-		render(); // non-hot
+		render();
+	}
+	
+	function render() 
+	{
+		var history = ReactRouter.browserHistory;
+		
+		var app = ReactDOM.render( mediate(jsx('
+		
+			<Router history=$history>
+				<Route path="/" component=$pageWrapper>
+					<IndexRoute getComponent=${RouteBundle.load(TodoListView)}/>
+					<Route path="about" getComponent=${RouteBundle.load(AboutView)}/>
+				</Route>
+			</Router>
+			
+		')), root);
+		
+		#if (debug && react_hot)
+		ReactHMR.autoRefresh(app);
 		#end
 	}
 	
-	function render(?_) 
+	static function pageWrapper(props:RouteComponentProps)
 	{
-		ReactDOM.render(mediate(jsx('<TodoListView/>')), root);
+		return jsx('
+			<div>
+				<nav>
+					<Link to="/">Todo</Link> | <Link to="/about">About</Link> 
+				</nav>
+				${props.children}
+			</div>
+		');
 	}
 }

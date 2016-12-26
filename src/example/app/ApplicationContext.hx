@@ -45,7 +45,7 @@ import example.todo.view.TodoListViewMediator;
 	@see mmvc.impl.Context
 */
 
-#if livereload
+#if debug
 // Macro enabling mediated React views live reload
 @:build(mmvc.react.ContextMacro.build())
 #end

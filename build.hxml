@@ -1,8 +1,15 @@
-common.hxml
+-lib modular
+-lib mmvc
+-lib react
+-lib react-router
 
-# no auto-expose
---macro Stub.modules()
+-cp lib
+-cp src
 
-# single JS release output
+-D react_hot
+
 -js bin/index.js
+
+# reference context first
+example.app.ApplicationContext
 -main Main
