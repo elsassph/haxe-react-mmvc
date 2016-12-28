@@ -10,9 +10,7 @@ import react.ReactMacro.jsx;
 	Base class for the root view of a React MMVC application
 	React rendering should be wrapped by the `mediate` function:
 	
-		override function render() {
-			return ReactDOM.render( mediate(jsx('<MyApp/>')), root);
-		}
+		ReactDOM.render( mediate(jsx('<MyApp/>')), root);
 	
 **/
 class ReactApplication implements mmvc.api.IViewContainer
@@ -81,7 +79,7 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 		super();
 	}
 	
-	public function viewAdded(view:ReactElement)
+	public function viewAdded(view:ReactComponent)
 	{
 		#if debug
 		// look for mediator override
@@ -103,7 +101,7 @@ class ContextMediator extends ReactComponentOfProps<ContextMediatorProps>
 		if (listener != null) listener.viewAdded(view);
 	}
 	
-	public function viewRemoved(view:ReactElement)
+	public function viewRemoved(view:ReactComponent)
 	{
 		// lifecycle
 		if (listener != null) listener.viewRemoved(view);

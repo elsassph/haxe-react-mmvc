@@ -5,7 +5,7 @@ import js.html.Event;
 import js.html.KeyboardEvent;
 import js.html.MouseEvent;
 import mmvc.react.ILifecycleListener;
-import react.ReactComponent.ReactElement;
+import react.ReactComponent;
 import react.ReactDOM;
 
 class FocusManager implements ILifecycleListener
@@ -15,7 +15,7 @@ class FocusManager implements ILifecycleListener
 	{
 	}
 	
-	public function viewAdded(view:ReactElement)
+	public function viewAdded(view:ReactComponent)
 	{
 		trace('Added: ' + Type.getClassName(Type.getClass(view)));
 		
@@ -37,7 +37,7 @@ class FocusManager implements ILifecycleListener
 		}
 	}
 	
-	public function viewRemoved(view:ReactElement)
+	public function viewRemoved(view:ReactComponent)
 	{
 		trace('Removed: ' + Type.getClassName(Type.getClass(view)));
 	}
