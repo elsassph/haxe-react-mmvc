@@ -8,8 +8,9 @@
 
 -D react_hot
 
--js bin/index.js
+# reference the MMVC context
+-D context=example.app.ApplicationContext
 
-# reference context first
-example.app.ApplicationContext
 -main Main
+
+-js bin/index.js
