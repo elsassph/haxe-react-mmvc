@@ -13,9 +13,9 @@ class MediateMacro
 	static public function build() 
 	{
 		// enforce evaluation of Context first
-		try Context.getType(Context.definedValue('context'))
-		catch (err:Dynamic)
+		if (!Context.defined('context'))
 			Context.fatalError('MMVC context definition missing: -D context=com.foo.ApplicationContext', Context.currentPos());
+		Context.getType(Context.definedValue('context'));
 		
 		var fields = Context.getBuildFields();
 		
