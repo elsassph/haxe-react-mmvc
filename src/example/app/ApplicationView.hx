@@ -45,8 +45,6 @@ import router.RouteComponentProps;
 
 class ApplicationView extends ReactApplication
 {
-	var root:DivElement;
-	
 	public function new()
 	{
 		super();
@@ -59,13 +57,13 @@ class ApplicationView extends ReactApplication
 	public function createViews()
 	{
 		var doc = Browser.document;
-		root = doc.createDivElement();
+		var root = doc.createDivElement();
 		doc.body.appendChild(root);
 		
-		render();
+		render(root);
 	}
 	
-	function render() 
+	function render(root:DivElement) 
 	{
 		var history = ReactRouter.browserHistory;
 		
