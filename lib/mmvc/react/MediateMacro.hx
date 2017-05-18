@@ -9,26 +9,26 @@ class MediateMacro
 {
 	// map is populated by ContextMacro by looking up the mediateMap.mapView() calls
 	static public var map:Map<String, String> = new Map();
-	
-	static public function build() 
+
+	static public function build()
 	{
 		// enforce evaluation of Context first
 		if (!Context.defined('context'))
 			Context.fatalError('MMVC context definition missing: -D context=com.foo.ApplicationContext', Context.currentPos());
 		Context.getType(Context.definedValue('context'));
-		
+
 		var fields = Context.getBuildFields();
-		
+
 		addMediator(fields);
-		
+
 		if (!updateMount(fields)) addMount(fields);
 		if (!updateUnmount(fields)) addUnmount(fields);
 		addContextTypes(fields);
-		
+
 		return fields;
 	}
-	
-	static function addMediator(fields:Array<Field>) 
+
+	static function addMediator(fields:Array<Field>)
 	{
 		var fqcn = getFQCN();
 		if (map.exists(fqcn))
@@ -43,18 +43,18 @@ class MediateMacro
 			});
 		}
 	}
-	
+
 	static function getFQCN()
 	{
 		var t:ClassType = Context.getLocalClass().get();
 		if (t.module.indexOf('.${t.name}') > 0) return t.module;
 		else return t.module + '.${t.name}';
 	}
-	
-	static function addContextTypes(fields:Array<Field>) 
+
+	static function addContextTypes(fields:Array<Field>)
 	{
 		var contextTypes = macro {
-			mediator: react.React.PropTypes.object.isRequired
+			mediator: react.ReactPropTypes.object.isRequired
 		};
 		fields.push({
 			name: 'contextTypes',
@@ -63,15 +63,15 @@ class MediateMacro
 			pos: Context.currentPos()
 		});
 	}
-	
-	static function addUnmount(fields:Array<Field>) 
+
+	static function addUnmount(fields:Array<Field>)
 	{
 		var componentWillUnmount = {
 			args: [],
 			ret: macro :Void,
 			expr: exprUnmount()
 		}
-		
+
 		fields.push({
 			name: 'componentWillUnmount',
 			access: [APublic, AOverride],
@@ -79,8 +79,8 @@ class MediateMacro
 			pos: Context.currentPos()
 		});
 	}
-	
-	static function updateUnmount(fields:Array<Field>) 
+
+	static function updateUnmount(fields:Array<Field>)
 	{
 		for (field in fields)
 		{
@@ -99,20 +99,20 @@ class MediateMacro
 		}
 		return false;
 	}
-	
-	static function exprUnmount() 
+
+	static function exprUnmount()
 	{
 		return macro this.context.mediator.viewRemoved(this);
 	}
-	
-	static function addMount(fields:Array<Field>) 
+
+	static function addMount(fields:Array<Field>)
 	{
 		var componentDidMount = {
 			args: [],
 			ret: macro :Void,
 			expr: exprMount()
 		}
-		
+
 		fields.push({
 			name: 'componentDidMount',
 			access: [APublic, AOverride],
@@ -120,8 +120,8 @@ class MediateMacro
 			pos: Context.currentPos()
 		});
 	}
-	
-	static function updateMount(fields:Array<Field>) 
+
+	static function updateMount(fields:Array<Field>)
 	{
 		for (field in fields)
 		{
@@ -140,8 +140,8 @@ class MediateMacro
 		}
 		return false;
 	}
-	
-	static function exprMount() 
+
+	static function exprMount()
 	{
 		return macro this.context.mediator.viewAdded(this);
 	}
