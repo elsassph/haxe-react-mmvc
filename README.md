@@ -80,6 +80,8 @@ Point your browser to `http://localhost:35729`
 
 That's all - no Webpack dark magic needed.
 
+Note: Modular provides live-reload of React components only.
+
 ### Release build
 
 Release build as a single Haxe-JS bundle:

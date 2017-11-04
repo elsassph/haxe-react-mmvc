@@ -1,4 +1,5 @@
 -lib modular
+-lib minject:1.6.1
 -lib mmvc
 -lib react
 -lib react-router
