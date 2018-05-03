@@ -44,7 +44,7 @@ Install Haxe libraries
 	haxelib install react
 	haxelib install react-router
 	haxelib install mmvc
-	haxelib install minject
+	haxelib install minject 1.6.1
 	haxelib install msignal
 
 For more information about the libraries:
